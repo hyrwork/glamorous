@@ -23,7 +23,6 @@ import {
  */
 function glamorous(Comp) {
   return glamorousComponentFactory
-
   /**
      * This returns a React Component that renders the comp (closure)
      * with the given glamor styles object(s)
@@ -52,6 +51,7 @@ function glamorous(Comp) {
         // } else {
         //     this.setTheme(theme || {})
         // }
+        this.cachedStyles = {}
       }
 
       componentWillReceiveProps(nextProps) {
@@ -83,9 +83,17 @@ function glamorous(Comp) {
           ...glamorousStyles,
           ...styleProps,
         }
-        const cachedStyles = StyleSheet.create({key: mergedStyles})
+        const index = JSON.stringify(mergedStyles)
+        let cachedStyleNumber = null
+        if (index in this.cachedStyles) {
+          cachedStyleNumber = this.cachedStyles[index]
+        } else {
+          cachedStyleNumber = StyleSheet.create({key: mergedStyles}).key
+          this.cachedStyles[index] = cachedStyleNumber
+        }
+        console.log(cachedStyleNumber)
         return (
-          <Comp style={[cachedStyles.key, styles]} {...toForward}>
+          <Comp style={[cachedStyleNumber, styles]} {...toForward}>
             {children}
           </Comp>
         )
@@ -115,7 +123,7 @@ glamorous.TouchableOpacity = glamorous(TouchableOpacity)
 glamorous.TouchableWithoutFeedback = glamorous(TouchableWithoutFeedback)
 
 /**
- * should-forward-property substitute
+ * should-forward-native-property substitute
  */
 
 const RNStyles = [
