@@ -73,11 +73,11 @@ function glamorous(Comp) {
       }
 
       render() {
-        const {children, ...rest} = this.props
+        const {...rest} = this.props
         const {
           toForward,
           styleProps,
-          styles,
+          style,
         } = splitProps(rest)
         const mergedStyles = {
           ...glamorousStyles,
@@ -92,11 +92,7 @@ function glamorous(Comp) {
           this.cachedStyles[index] = cachedStyleNumber
         }
         console.log(cachedStyleNumber)
-        return (
-          <Comp style={[cachedStyleNumber, styles]} {...toForward}>
-            {children}
-          </Comp>
-        )
+        return <Comp style={[cachedStyleNumber, style]} {...toForward} />
       }
     }
 
@@ -207,8 +203,8 @@ const RNStyles = [
 const hasItem = (list, name) => list.indexOf(name) !== -1
 const isRNStyle = name => hasItem(RNStyles, name)
 
-function splitProps({styles, ...rest}) {
-  const returnValue = {toForward: {}, styleProps: {}, styles}
+function splitProps({style, ...rest}) {
+  const returnValue = {toForward: {}, styleProps: {}, style}
   return Object.keys(rest).reduce(
     (split, propName) => {
       if (isRNStyle(propName)) {
