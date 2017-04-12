@@ -140,6 +140,15 @@
       "contributions": [
         "review"
       ]
+    },
+    {
+      "login": "ssomnoremac",
+      "name": "Cameron Moss",
+      "avatar_url": "https://avatars2.githubusercontent.com/u/3521359?v=3",
+      "profile": "http://hyr.work",
+      "contributions": [
+        "code"
+      ]
     }
   ]
 }
