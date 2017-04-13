@@ -51,7 +51,6 @@ function glamorous(Comp) {
         // } else {
         //     this.setTheme(theme || {})
         // }
-        this.cachedStyles = {}
       }
 
       componentWillReceiveProps(nextProps) {
@@ -79,20 +78,17 @@ function glamorous(Comp) {
           styleProps,
           style,
         } = splitProps(rest)
-        const mergedStyles = {
+        const staticStyles = {
           ...glamorousStyles,
           ...styleProps,
         }
-        const index = JSON.stringify(mergedStyles)
-        let cachedStyleNumber = null
-        if (index in this.cachedStyles) {
-          cachedStyleNumber = this.cachedStyles[index]
-        } else {
-          cachedStyleNumber = StyleSheet.create({key: mergedStyles}).key
-          this.cachedStyles[index] = cachedStyleNumber
-        }
-        console.log(cachedStyleNumber)
-        return <Comp style={[cachedStyleNumber, style]} {...toForward} />
+        console.log(this.cachedStylesNumber)
+        this.cachedStylesNumber = this.cachedStylesNumber ||
+          StyleSheet.create({key: staticStyles}).key
+        const mergedStyles = Array.isArray(style) ?
+          [this.cachedStylesNumber, ...style] :
+          [this.cachedStylesNumber, style]
+        return <Comp style={mergedStyles} {...toForward} />
       }
     }
 
@@ -122,82 +118,96 @@ glamorous.TouchableWithoutFeedback = glamorous(TouchableWithoutFeedback)
  * should-forward-native-property substitute
  */
 
+// This list is not complete. View and Text styles only.
 const RNStyles = [
-  'width',
-  'height',
-  'top',
-  'left',
-  'right',
-  'bottom',
-  'minWidth',
-  'maxWidth',
-  'minHeight',
-  'maxHeight',
-  'margin',
-  'marginVertical',
-  'marginHorizontal',
-  'marginTop',
-  'marginBottom',
-  'marginLeft',
-  'marginRight',
-  'padding',
-  'paddingVertical',
-  'paddingHorizontal',
-  'paddingTop',
-  'paddingBottom',
-  'paddingLeft',
-  'paddingRight',
-  'borderWidth',
-  'borderTopWidth',
-  'borderRightWidth',
-  'borderBottomWidth',
-  'borderLeftWidth',
-  'position',
-  'flexDirection',
-  'flexWrap',
-  'justifyContent',
   'alignItems',
   'alignSelf',
-  'overflow',
-  'flex',
-  'flexGrow',
-  'flexShrink',
-  'flexBasis',
-  'aspectRatio',
-  'zIndex',
-  'shadowOpacity',
-  'shadowRadius',
-  'decomposedMatrix',
-  'scaleX',
-  'scaleY',
-  'rotation',
-  'translateX',
-  'translateY',
   'backfaceVisibility',
-  'borderRadius',
-  'borderTopLeftRadius',
-  'borderTopRightRadius',
+  'backgroundColor',
+  'borderBottomColor',
   'borderBottomLeftRadius',
   'borderBottomRightRadius',
+  'borderBottomWidth',
+  'borderColor',
+  'borderLeftColor',
+  'borderLeftWidth',
+  'borderRadius',
+  'borderRightColor',
+  'borderRightWidth',
   'borderStyle',
-  'opacity',
+  'borderTopColor',
+  'borderTopLeftRadius',
+  'borderTopRightRadius',
+  'borderTopWidth',
+  'borderWidth',
+  'bottom',
+  'color',
+  'decomposedMatrix',
   'elevation',
+  'flex',
+  'flexBasis',
+  'flexDirection',
+  'flexGrow',
+  'flexShrink',
+  'flexWrap',
   'fontFamily',
   'fontSize',
   'fontStyle',
-  'fontWeight',
   'fontVariant',
-  'textShadowOffset',
-  'textShadowRadius',
+  'fontWeight',
+  'height',
+  'justifyContent',
+  'left',
   'letterSpacing',
   'lineHeight',
+  'margin',
+  'marginBottom',
+  'marginHorizontal',
+  'marginLeft',
+  'marginRight',
+  'marginTop',
+  'marginVertical',
+  'maxHeight',
+  'maxWidth',
+  'minHeight',
+  'minWidth',
+  'opacity',
+  'overflow',
+  'overlayColor',
+  'padding',
+  'paddingBottom',
+  'paddingHorizontal',
+  'paddingLeft',
+  'paddingRight',
+  'paddingTop',
+  'paddingVertical',
+  'position',
+  'resizeMode',
+  'right',
+  'rotation',
+  'scaleX',
+  'scaleY',
+  'shadowColor',
+  'shadowOffset',
+  'shadowOpacity',
+  'shadowRadius',
   'textAlign',
   'textAlignVertical',
-  'includeFontPadding',
+  'textDecorationColor',
   'textDecorationLine',
   'textDecorationStyle',
+  'textShadowColor',
+  'textShadowOffset',
+  'textShadowRadius',
+  'tintColor',
+  'top',
+  'transform',
+  'transformMatrix',
+  'translateX',
+  'translateY',
+  'width',
   'writingDirection',
-  'resizeMode',
+  'zIndex',
 ]
 
 const hasItem = (list, name) => list.indexOf(name) !== -1
