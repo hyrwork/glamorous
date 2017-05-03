@@ -82,7 +82,6 @@ function glamorous(Comp) {
           ...glamorousStyles,
           ...styleProps,
         }
-        console.log(this.cachedStylesNumber)
         this.cachedStylesNumber = this.cachedStylesNumber ||
           StyleSheet.create({key: staticStyles}).key
         const mergedStyles = Array.isArray(style) ?
@@ -104,15 +103,25 @@ function glamorous(Comp) {
   }
 }
 
-glamorous.View = glamorous(View)
-glamorous.Image = glamorous(Image)
-glamorous.ListView = glamorous(ListView)
-glamorous.ScrollView = glamorous(ScrollView)
-glamorous.Text = glamorous(Text)
-glamorous.TouchableHighlight = glamorous(TouchableHighlight)
-glamorous.TouchableNativeFeedback = glamorous(TouchableNativeFeedback)
-glamorous.TouchableOpacity = glamorous(TouchableOpacity)
-glamorous.TouchableWithoutFeedback = glamorous(TouchableWithoutFeedback)
+glamorous.view = glamorous(View)
+glamorous.image = glamorous(Image)
+glamorous.listView = glamorous(ListView)
+glamorous.scrollView = glamorous(ScrollView)
+glamorous.text = glamorous(Text)
+glamorous.touchableHighlight = glamorous(TouchableHighlight)
+glamorous.touchableNativeFeedback = glamorous(TouchableNativeFeedback)
+glamorous.touchableOpacity = glamorous(TouchableOpacity)
+glamorous.touchableWithoutFeedback = glamorous(TouchableWithoutFeedback)
+
+glamorous.View = glamorous.view()
+glamorous.Image = glamorous.image()
+glamorous.ListView = glamorous.listView()
+glamorous.ScrollView = glamorous.scrollView()
+glamorous.Text = glamorous.text()
+glamorous.TouchableHighlight = glamorous.touchableHighlight()
+glamorous.TouchableNativeFeedback = glamorous.touchableNativeFeedback()
+glamorous.TouchableOpacity = glamorous.touchableOpacity()
+glamorous.TouchableWithoutFeedback = glamorous.touchableWithoutFeedback()
 
 /**
  * should-forward-native-property substitute
@@ -222,7 +231,6 @@ function splitProps({style, ...rest}) {
       } else {
         split.toForward[propName] = rest[propName]
       }
-      console.log(split)
       return split
     },
     returnValue,
