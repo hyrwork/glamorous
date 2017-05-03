@@ -51,6 +51,7 @@ function glamorous(Comp) {
         // } else {
         //     this.setTheme(theme || {})
         // }
+        this.cachedStyles = {}
       }
 
       componentWillReceiveProps(nextProps) {
@@ -71,6 +72,30 @@ function glamorous(Comp) {
         // this.unsubscribe && this.unsubscribe()
       }
 
+      /**
+       * This is a function which will cache the styles
+       * differently depending on if in DEV mode or not.
+       * Caching styles on instance won't work for hot-reloading.
+       * Memoizing the static styles solves this.
+       * @param {Object} staticStyles
+       */
+      _cacheStaticStyles(staticStyles) {
+        if (__DEV__) {
+          const index = JSON.stringify(staticStyles)
+          if (index in this.cachedStyles) {
+            this.cachedStylesNumber = this.cachedStyles[index]
+          } else {
+            this.cachedStylesNumber = StyleSheet.create({
+              key: staticStyles,
+            }).key
+            this.cachedStyles[index] = this.cachedStylesNumber
+          }
+        } else {
+          this.cachedStylesNumber = this.cachedStylesNumber ||
+            StyleSheet.create({key: staticStyles}).key
+        }
+      }
+
       render() {
         const {...rest} = this.props
         const {
@@ -82,11 +107,11 @@ function glamorous(Comp) {
           ...glamorousStyles,
           ...styleProps,
         }
-        this.cachedStylesNumber = this.cachedStylesNumber ||
-          StyleSheet.create({key: staticStyles}).key
+        this._cacheStaticStyles(staticStyles)
         const mergedStyles = Array.isArray(style) ?
           [this.cachedStylesNumber, ...style] :
           [this.cachedStylesNumber, style]
+
         return <Comp style={mergedStyles} {...toForward} />
       }
     }
